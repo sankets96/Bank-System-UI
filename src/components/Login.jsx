@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthLayout from "./AuthLayout";
 import FormField from "./FormField";
-import { ApiError, loginCustomer, saveSession } from "../api/authApi";
+import ForgotPasswordModal from "./ForgotPasswordModal";
+import { ApiError } from "../api/http";
+import { loginCustomer, saveSession } from "../api/authApi";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -19,6 +21,7 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
 
   const update = (field) => (e) => {
     setForm((f) => ({ ...f, [field]: e.target.value }));
@@ -55,48 +58,63 @@ export default function Login() {
   };
 
   return (
-    <AuthLayout
-      title="Welcome back"
-      subtitle="Log in to see your accounts and manage your money."
-      footer={
-        <>
-          New here?{" "}
-          <Link to="/register" className="font-semibold text-forest underline underline-offset-4 hover:text-forest-deep">
-            Create an account
-          </Link>
-        </>
-      }
-    >
-      {justRegistered && (
-        <div role="status" className="mb-6 rounded-lg border border-forest/25 bg-forest/10 px-4 py-3 text-sm text-forest-deep">
-          Your account is ready. Log in to continue.
-        </div>
-      )}
-      {formError && (
-        <div role="alert" className="mb-6 rounded-lg border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
-          {formError}
-        </div>
-      )}
+    <>
+      <AuthLayout
+        title="Welcome back"
+        subtitle="Log in to see your accounts and manage your money."
+        footer={
+          <div className="flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-x-6">
+            <span>
+              New here?{" "}
+              <Link to="/register" className="font-semibold text-forest underline underline-offset-4 hover:text-forest-deep">
+                Create an account
+              </Link>
+            </span>
+            <button
+              type="button"
+              onClick={() => setForgotOpen(true)}
+              className="font-semibold text-forest underline underline-offset-4 hover:text-forest-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+            >
+              Forgot password?
+            </button>
+          </div>
+        }
+      >
+        {justRegistered && (
+          <div role="status" className="mb-6 rounded-lg border border-forest/25 bg-forest/10 px-4 py-3 text-sm text-forest-deep">
+            Your account is ready. Log in to continue.
+          </div>
+        )}
+        {formError && (
+          <div role="alert" className="mb-6 rounded-lg border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
+            {formError}
+          </div>
+        )}
 
-      <form onSubmit={onSubmit} noValidate className="space-y-5">
-        <FormField
-          id="email" label="Email" type="email" autoComplete="email" inputMode="email"
-          placeholder="you@example.com" value={form.email} onChange={update("email")} error={errors.email}
-        />
-        <FormField
-          id="password" label="Password" type="password" autoComplete="current-password"
-          placeholder="Enter your password" value={form.password} onChange={update("password")} error={errors.password}
-        />
+        <form onSubmit={onSubmit} noValidate className="space-y-5">
+          <FormField
+            id="email" label="Email" type="email" autoComplete="email" inputMode="email"
+            placeholder="you@example.com" value={form.email} onChange={update("email")} error={errors.email}
+          />
+          <FormField
+            id="password" label="Password" type="password" autoComplete="current-password"
+            placeholder="Enter your password" value={form.password} onChange={update("password")} error={errors.password}
+          />
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="flex h-12 w-full items-center justify-center gap-2.5 rounded-lg bg-forest font-semibold text-white transition hover:bg-forest-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          {loading && <Spinner />}
-          {loading ? "Logging in…" : "Log in"}
-        </button>
-      </form>
-    </AuthLayout>
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex h-12 w-full items-center justify-center gap-2.5 rounded-lg bg-forest font-semibold text-white transition hover:bg-forest-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {loading && <Spinner />}
+            {loading ? "Logging in…" : "Log in"}
+          </button>
+        </form>
+      </AuthLayout>
+
+      {forgotOpen && (
+        <ForgotPasswordModal onClose={() => setForgotOpen(false)} initialEmail={form.email} />
+      )}
+    </>
   );
 }

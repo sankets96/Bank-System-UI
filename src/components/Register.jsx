@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "./AuthLayout";
 import FormField from "./FormField";
-import { ApiError, registerCustomer } from "../api/authApi";
+import { ApiError } from "../api/http";
+import { registerCustomer } from "../api/authApi";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MOBILE_RE = /^[6-9]\d{9}$/; // 10-digit Indian mobile number
