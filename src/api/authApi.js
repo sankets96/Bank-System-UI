@@ -1,13 +1,13 @@
 import { post } from "./http";
 
 // POST /api/auth/register  -> 201 { message, userId, firstName, lastName, email, mobileNumber }
-export const registerCustomer = (payload) => post("/api/auth/register", payload);
+export const registerCustomer = (payload) => post("/auth/register", payload);
 
 // POST /api/auth/login  -> 200 { message, userId, email, role, token }
-export const loginCustomer = (payload) => post("/api/auth/login", payload);
+export const loginCustomer = (payload) => post("/auth/login", payload);
 
 // POST /api/auth/forgot-password  -> 200 { message }
-export const requestPasswordReset = (payload) => post("/api/auth/forgot-password", payload);
+export const requestPasswordReset = (payload) => post("/auth/forgot-password", payload);
 
 // --- session helpers ---
 const KEY = "bank_session";

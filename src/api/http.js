@@ -23,7 +23,7 @@ async function request(method, path, body) {
 
   let res;
   try {
-    res = await fetch(`${BASE_URL}${path}`, options);
+    res = await fetch(`${BASE_URL.replace(/\/$/, "")}${path}`, options);
   } catch {
     throw new ApiError(0, "Can't reach the server. Check your connection and try again.");
   }
